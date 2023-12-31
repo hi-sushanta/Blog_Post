@@ -85,14 +85,15 @@ while True:
         cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
 
         length = math.hypot(x2 - x1, y2 - y1)
-        length2 = math.hypot(x3 - x1,y3 - y1)
+        # length2 = math.hypot(x3 - x1,y3 - y1)
+        length2 = math.hypot(x1-x3,y1 - y3)
 
         
 
         if length < 20:
             cv2.circle(img, (cx, cy), 15, (0, 255, 0), cv2.FILLED)
             attach = 1
-        elif length2 > 350:
+        elif length2 > 150:
             cv2.circle(img,(x1,y1),16,(255,0,255),cv2.FILLED)
             cv2.circle(img,(x3,y3),15,(255,0,255),cv2.FILLED)
             cv2.line(img,(x1,y1),(x3,y3),(255,0,255),3)
