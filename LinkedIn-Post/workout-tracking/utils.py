@@ -129,7 +129,7 @@ def plot(pose_result, plot_size_redio, show_points=None, show_skeleton=None):
                     if pos2[0] % shape[1] == 0 or pos2[1] % shape[0] == 0 or pos2[0] < 0 or pos2[1] < 0:
                         continue
                     cv2.line(self.im, pos1, pos2, [int(x) for x in self.limb_color[i]],
-                             thickness=int(line_thickness * plot_size_redio), lineType=cv2.LINE_AA)
+                             thickness=int(line_thickness * plot_size_redio)-3, lineType=cv2.LINE_AA)
             if self.pil:
                 self.fromarray(self.im)
 
@@ -143,21 +143,27 @@ def plot(pose_result, plot_size_redio, show_points=None, show_skeleton=None):
 def put_text(frame, exercise, count, fps, redio):
 
     if exercise in sport_list.keys():
-        cv2.putText(
-            frame, f'Exercise: {exercise}', (int(30 * redio), int(50 * redio)), 0, 0.9 * redio,
-            (54, 103, 252), thickness=int(2 * redio)+2, lineType=cv2.LINE_AA
-        )
+        if exercise == "pushup":
+            cv2.putText(
+                frame, f'Exercise: Push-Up', (int(30 * redio), int(50 * redio)), 0, 0.9 * redio,
+                (0, 0, 254), thickness=int(2 * redio), lineType=cv2.LINE_4
+            )  
+        else:
+            cv2.putText(
+                frame, f'Exercise: {exercise}', (int(30 * redio), int(50 * redio)), 0, 0.9 * redio,
+                (0, 0, 254), thickness=int(2 * redio), lineType=cv2.LINE_4
+            )
     elif exercise == 'No Object':
         cv2.putText(
             frame, f'No Object', (int(30 * redio), int(50 * redio)), 0, 0.9 * redio,
-            (54, 103, 252), thickness=int(2 * redio), lineType=cv2.LINE_AA
+            (0, 0, 254), thickness=int(2 * redio), lineType=cv2.LINE_4
         )
     cv2.putText(
         frame, f'Count: {count}', (int(30 * redio), int(100 * redio)), 0, 0.9 * redio,
-        (54, 103, 252), thickness=int(2 * redio), lineType=cv2.LINE_AA
+        (0, 0, 254), thickness=int(2 * redio), lineType=cv2.LINE_4
     )
     cv2.putText(
         frame, f'FPS: {fps}', (int(30 * redio), int(150 * redio)), 0, 0.9 * redio,
-       (54, 103, 252) , thickness=int(2 * redio), lineType=cv2.LINE_AA
+       (0, 0, 254), thickness=int(2 * redio), lineType=cv2.LINE_4
     )
 
