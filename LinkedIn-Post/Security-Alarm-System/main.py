@@ -40,7 +40,7 @@ class ObjectDetection:
         self.email_sent = False
 
         # model information
-        self.model = YOLO("yolov8n.pt")
+        self.model = YOLO(r"LinkedIn-Post\Security-Alarm-System\best.pt")
 
         # visual information
         self.annotator = None
@@ -86,7 +86,6 @@ class ObjectDetection:
             assert ret
             results = self.predict(im0)
             im0, class_ids = self.plot_bboxes(results, im0)
-
             if len(class_ids) > 0:  # Only send email If not sent before
                 if not self.email_sent:
                     send_email(to_email, from_email, im0, len(class_ids))
@@ -98,7 +97,7 @@ class ObjectDetection:
             cv2.imshow('YOLOv8 Detection', im0)
             frame_count += 1
             key = cv2.waitKey(1)
-            if (key== ord("Q")) and (key == ord("q")) and (key == 27):
+            if (key== ord("Q")) or (key == ord("q")) or (key == 27):
                 break
         cap.release()
         cv2.destroyAllWindows()
