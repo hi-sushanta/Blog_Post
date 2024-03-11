@@ -3,8 +3,10 @@ import cv2
 import supervision as sv
 from ultralytics import YOLO
 import dlib
+
 model = YOLO("yolov8n.pt")
 corner_annotator = sv.BoxCornerAnnotator()
+
 
 def fannotate(frame,detections):
     annotated_frame = corner_annotator.annotate(
@@ -14,8 +16,8 @@ def fannotate(frame,detections):
     return annotated_frame
 
 cap = cv2.VideoCapture(0)
-cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
-cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1920)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
 
 # Age Prediction Model:
 # ------------ Model for Age detection --------# 
@@ -31,7 +33,7 @@ model_mean = (78.4263377603, 87.7689143744, 114.895847746)
   
 # ------------- Model for face detection---------# 
 face_detector = dlib.get_frontal_face_detector() 
-# converting to grayscale 
+
 while True:
     isFrame, frame = cap.read()
     if not isFrame:
@@ -57,8 +59,9 @@ while True:
     cv2.putText(frame,"Pepole",(int(w/8),h-20),cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,255,0),2,cv2.LINE_AA)
      
     # Age Prediction
-    # converting to grayscale 
-    img_gray = cv2.cvtColor(cframe, cv2.COLOR_BGR2GRAY) 
+    # converting BGR to RGB and Then convert RGB to grayscale 
+    img_rgb = cv2.cvtColor(cframe,cv2.COLOR_BGR2RGB)
+    img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2GRAY) 
   
     # -------------detecting the faces--------------# 
     faces = face_detector(img_gray) 
@@ -76,6 +79,7 @@ while True:
             box = [x, y, x2, y2] 
             Boxes.append(box) 
         for box in Boxes: 
+            # print(f"Box0:{box[0]},Box1:{box[1]},Box2:{box[2]},Box3:{box[3]}")
             face = frame[box[1]:box[3], box[0]:box[2]] 
     
             # ----- Image preprocessing --------# 
@@ -86,11 +90,10 @@ while True:
             age_Net.setInput(blob) 
             age_preds = age_Net.forward() 
             age = f"{ageList[age_preds[0].argmax()]}" 
+            cv2.putText(frame,f"{age}",(box[0],box[1]-70),cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,255,0),2,cv2.LINE_AA)
     
-    cv2.putText(frame,f"{age}",(int(w/4),h-50),cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,255,0),2,cv2.LINE_AA)
-    cv2.putText(frame,"Age",(int(w/4),h-20),cv2.FONT_HERSHEY_SIMPLEX,0.8,(0,255,0),2,cv2.LINE_AA)
 
-    cv2.imshow("hello",frame)
+    cv2.imshow("Age With Person",frame)
     key = cv2.waitKey(1)
     if key == ord("Q") or key == ord('q') or key == 27:
         break
