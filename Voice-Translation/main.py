@@ -2,7 +2,7 @@
 from transformers import MBartForConditionalGeneration, MBart50TokenizerFast
 from gtts import gTTS 
 from playsound import playsound
-
+import speech_recognition as s_r
 # This module is imported so that we can  
 # play the converted audio 
 import os 
@@ -55,6 +55,19 @@ def convert_text_to_text(text,src_lang="en_XX",dst_lang="hi_IN"):
 # myobj.save("welcome.mp3") 
 # playsound('welcome.mp3')
 
+def input_text():
+        r = s_r.Recognizer()
+        said = " "
+        with s_r.Microphone(device_index=1) as source:
+            print("Say now!!!!")
+            # r.adjust_for_ambient_noise(source)  # reduce noise
+            audio = r.listen(source,phrase_time_limit=6)  # take voice input from the microphone
+            try:
+                said = r.recognize_google(audio,language='en-in')
+            except Exception as e:
+                print("Exception: " + str(e))
+        return said
+
 while True:
     input_src_lang = input("Input Source Language: ").lower()
     if input_src_lang in ["break","Break"]:
@@ -70,11 +83,16 @@ while True:
             tar_lang = language_dict[input_tar_lang]  
 
             enter_the_text = input("Input You Source Text: ")
+            # enter_the_text = input_text()
+            # print(enter_the_text)
 
             if (enter_the_text != "break") and (enter_the_text != "Break"):
                 output_text = convert_text_to_text(enter_the_text,src_lang=src_lang,dst_lang=tar_lang)
                 my_obj = gTTS(output_text[0],lang=tar_lang[:2],slow=False)
                 my_obj.save("translate_text.mp3")
                 playsound("translate_text.mp3")
+                os.remove("translate_text.mp3")
             else:
                 break
+    else:
+        print("Check Your Language Choice section!")
