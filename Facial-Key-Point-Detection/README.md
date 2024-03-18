@@ -4,3 +4,6 @@ Facial keypoint detection with deep learning is a technique used in computer vis
 These keypoints act like landmarks, typically corresponding to facial features like eyes, nose, mouth, and sometimes even eyebrows and the outline of the face. 
 Deep learning models are particularly adept at this task due to their ability to handle complex patterns.
 
+Ready to dive deeper and craft your own model to explore the real world? Check out this article to ignite your journey!
+
+***link:*** https://hiwhy.io/facial-keypoint-detection-with-pytorch
