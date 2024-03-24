@@ -3,6 +3,7 @@ import cv2
 import supervision as sv
 from ultralytics import YOLO
 import dlib
+import numpy as np
 
 model = YOLO("yolov8n.pt")
 corner_annotator = sv.BoxCornerAnnotator()
@@ -21,8 +22,8 @@ cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
 
 # Age Prediction Model:
 # ------------ Model for Age detection --------# 
-age_weights = "age_deploy.prototxt"
-age_config = "age_net.caffemodel"
+age_weights = r"C:\Users\hi_ai\Documents\MyProject\Blog_Post\LinkedIn-Post\people-count-and-age-predict\age_deploy.prototxt"
+age_config = r"C:\Users\hi_ai\Documents\MyProject\Blog_Post\LinkedIn-Post\people-count-and-age-predict\age_net.caffemodel"
 age_Net = cv2.dnn.readNet(age_config, age_weights) 
   
 # Model requirements for image 
@@ -82,10 +83,10 @@ while True:
             # print(f"Box0:{box[0]},Box1:{box[1]},Box2:{box[2]},Box3:{box[3]}")
             face = frame[box[1]:box[3], box[0]:box[2]] 
     
-            # ----- Image preprocessing --------# 
+
             blob = cv2.dnn.blobFromImage( 
                 face, 1.0, (227, 227), model_mean, swapRB=False) 
-    
+
             # -------Age Prediction---------# 
             age_Net.setInput(blob) 
             age_preds = age_Net.forward() 
