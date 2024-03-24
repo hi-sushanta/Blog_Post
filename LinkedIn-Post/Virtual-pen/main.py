@@ -25,6 +25,11 @@ cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
 cap.set(4, 720)
 
+win_name = "Virtual-Frame"
+cv2.namedWindow(win_name, cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty(win_name,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
+
+
 detector = htm.handDetector(detectionCon=1,maxHands=1)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
@@ -96,7 +101,7 @@ while True:
 
 
     img[0:125, 0:1280] = header
-    cv2.imshow("Image", img)
+    cv2.imshow(win_name, img)
     
     key = cv2.waitKey(1)
 
