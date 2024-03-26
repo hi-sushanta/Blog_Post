@@ -19,18 +19,19 @@ for imPath in myList:
     image = cv2.imread(f'{folderPath}/{imPath}')
     overlayList.append(image)
 
-header = overlayList[0]
-drawColor = (127, 0, 255)
+header = overlayList[0] # Default header
+drawColor = (127, 0, 255) # Default Color 
 
 cap = cv2.VideoCapture(0)
 cap.set(3, 1280)
 cap.set(4, 720)
 
+# Display Full screen
 win_name = "Virtual-Frame"
 cv2.namedWindow(win_name, cv2.WND_PROP_FULLSCREEN)
 cv2.setWindowProperty(win_name,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
-
+# Maximum one hand supported.
 detector = htm.handDetector(detectionCon=1,maxHands=1)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
