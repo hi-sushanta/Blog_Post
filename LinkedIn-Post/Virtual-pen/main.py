@@ -10,7 +10,8 @@ eraserThickness = 100
 ########################
 
 
-folderPath = r"C:\Users\hi_ai\Documents\MyProject\Blog_Post\LinkedIn-Post\Virtual-pen\Header"
+folderPath = "Header"
+
 myList = os.listdir(folderPath)
 
 overlayList = []
