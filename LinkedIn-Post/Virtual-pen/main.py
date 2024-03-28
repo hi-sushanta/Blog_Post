@@ -80,11 +80,11 @@ while True:
                 elif 1050 < x1 < 1200:
                     header = overlayList[7]
                     drawColor = (0, 0, 0)
-            cv2.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv2.FILLED)
+            cv2.rectangle(img, (x1, y1 - 25), (x2, y2 + 25), drawColor, cv2.FILLED,lineType=cv2.LINE_AA)
             
 
         if fingers[1] and fingers[2] == False:
-            cv2.circle(img, (x1, y1), 15, drawColor, cv2.FILLED)
+            # cv2.circle(img, (x1, y1), 15, drawColor, cv2.FILLED)
             if xp == 0 and yp == 0:
                 xp, yp = x1, y1
 
