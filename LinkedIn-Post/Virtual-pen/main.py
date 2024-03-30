@@ -1,11 +1,10 @@
 import cv2
 import numpy as np
-import time
 import os
 import HandTrackingModule as htm
 
 #######################
-brushThickness = 16
+brushThickness = 2
 eraserThickness = 100
 ########################
 
@@ -36,11 +35,13 @@ detector = htm.handDetector(detectionCon=1,maxHands=1)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
+bgimage = cv2.imread("bgimage.jpg")
+
 while True:
 
     success, img = cap.read()
     img = cv2.flip(img, 1)
-
+    img_copy = img.copy()
     img = detector.findHands(img)
     lmList ,bbox = detector.findPosition(img, draw=False)
 
@@ -51,7 +52,7 @@ while True:
         x2, y2 = lmList[12][1:]
 
         fingers = detector.fingersUp()
-
+        
         if fingers[1] and fingers[2]:
             xp, yp = 0, 0
 
@@ -84,20 +85,25 @@ while True:
             
 
         if fingers[1] and fingers[2] == False:
-            # cv2.circle(img, (x1, y1), 15, drawColor, cv2.FILLED)
             if xp == 0 and yp == 0:
                 xp, yp = x1, y1
 
 
             if drawColor == (0, 0, 0):
-                cv2.line(img, (xp, yp), (x1, y1), drawColor, eraserThickness)
-                cv2.line(imgCanvas, (xp, yp), (x1, y1), drawColor, eraserThickness)
+                cv2.line(img, (xp, yp), (x1, y1), drawColor, eraserThickness,lineType=cv2.LINE_AA)
+                cv2.line(imgCanvas, (xp, yp), (x1, y1), drawColor, eraserThickness,lineType=cv2.LINE_AA)
             
             else:
-                cv2.line(img, (xp, yp), (x1, y1), drawColor, brushThickness)
-                cv2.line(imgCanvas, (xp, yp), (x1, y1), drawColor, brushThickness)
+                cv2.line(img, (xp, yp), (x1, y1), drawColor, brushThickness,lineType=cv2.LINE_AA)
+                cv2.line(imgCanvas, (xp, yp), (x1, y1), drawColor, brushThickness,lineType=cv2.LINE_AA)
 
             xp, yp = x1, y1
+        
+        # If finger gesture is detected Thumb_Up then clear my all text.
+        finger_ok = detector.all_clear(img_copy)
+        if finger_ok is not None:
+            if finger_ok == "Thumb_Up":
+                imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
 
 
@@ -106,7 +112,6 @@ while True:
     imgInv = cv2.cvtColor(imgInv,cv2.COLOR_GRAY2BGR)
     img = cv2.bitwise_and(img,imgInv)
     img = cv2.bitwise_or(img,imgCanvas)
-
 
     img[0:80, 0:1280] = header
     cv2.imshow(win_name, img)

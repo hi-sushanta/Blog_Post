@@ -2,7 +2,13 @@ import cv2
 import mediapipe as mp
 import time
 import math
-import numpy as np
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+
+# Create an GestureRecognizer object.
+base_options = python.BaseOptions(model_asset_path='gesture_recognizer.task')
+options = vision.GestureRecognizerOptions(base_options=base_options)
+recognizer = vision.GestureRecognizer.create_from_options(options)
 
 class handDetector():
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5, trackCon=0.5):
@@ -16,6 +22,9 @@ class handDetector():
         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
         self.tipIds = [4, 8, 12, 16, 20]
+
+        
+
 
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -70,6 +79,7 @@ class handDetector():
 
 
         return fingers
+    
 
     def findDistance(self, p1, p2, img, draw=True,r=15, t=3):
         x1, y1 = self.lmList[p1][1:]
@@ -84,6 +94,16 @@ class handDetector():
             length = math.hypot(x2 - x1, y2 - y1)
 
         return length, img, [x1, y1, x2, y2, cx, cy]
+    
+    def all_clear(self,img):
+        frame = mp.Image(image_format=mp.ImageFormat.SRGB, data=cv2.cvtColor(img,cv2.COLOR_BGR2RGB))
+        # Recognize gestures in the input image.
+        recognition_result = recognizer.recognize(frame)
+        if not recognition_result.gestures:
+            top_gesture = None
+        else:
+            top_gesture = recognition_result.gestures[0][0].category_name
+        return top_gesture
 
 def main():
     pTime = 0
