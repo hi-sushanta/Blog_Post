@@ -3,10 +3,6 @@ import numpy as np
 import os
 import HandTrackingModule as htm
 
-#######################
-brushThickness = 2
-eraserThickness = 100
-########################
 
 
 folderPath = "Header"
@@ -30,12 +26,21 @@ win_name = "Virtual-Frame"
 cv2.namedWindow(win_name, cv2.WND_PROP_FULLSCREEN)
 cv2.setWindowProperty(win_name,cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
+# Video writer
+w, h, fps = (int(cap.get(x)) for x in (cv2.CAP_PROP_FRAME_WIDTH, cv2.CAP_PROP_FRAME_HEIGHT, cv2.CAP_PROP_FPS))
+video_writer = cv2.VideoWriter("VirtualPenDemo.mp4",
+                               cv2.VideoWriter_fourcc(*'mp4v'),
+                               fps,
+                               (w, h))
 # Maximum one hand supported.
 detector = htm.handDetector(detectionCon=1,maxHands=1)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
 bgimage = cv2.imread("bgimage.jpg")
+
+brushThickness = 6
+eraserThickness = 100
 
 while True:
 
@@ -115,6 +120,8 @@ while True:
 
     img[0:80, 0:1280] = header
     cv2.imshow(win_name, img)
+    video_writer.write(img)
+
     
     key = cv2.waitKey(1)
 
@@ -122,4 +129,5 @@ while True:
         break
 
 cap.release()
+video_writer.release()
 cv2.destroyAllWindows()
