@@ -5,7 +5,7 @@ import HandTrackingModule as htm
 
 
 
-folderPath = "Header"
+folderPath = "Drawing-Bar"
 
 myList = os.listdir(folderPath)
 
@@ -36,8 +36,6 @@ video_writer = cv2.VideoWriter("VirtualPenDemo.mp4",
 detector = htm.handDetector(detectionCon=1,maxHands=1)
 xp, yp = 0, 0
 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
-
-bgimage = cv2.imread("bgimage.jpg")
 
 brushThickness = 6
 eraserThickness = 100
@@ -106,7 +104,9 @@ while True:
         
         # If finger gesture is detected Thumb_Up then clear my all text.
         finger_ok = detector.all_clear(img_copy)
+
         if finger_ok is not None:
+            print(finger_ok)
             if finger_ok == "Thumb_Up":
                 imgCanvas = np.zeros((720, 1280, 3), np.uint8)
 
