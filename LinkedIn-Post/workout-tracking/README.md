@@ -2,16 +2,6 @@
 
 Using YOLOv8 (fancy AI stuff), I built a model that can track your push-ups and count them super accurately. No more losing track or relying on guesswork!
 
-What it does:
-Count your push-ups automatically! ✅
-Super accurate thanks to AI magic! ✨
-Great for tracking your fitness progress and crushing your goals!
-
-What I used:
-YOLOv8 (AI for seeing things)
-Python (programming language)
-Deep Learning (a fancy way of making AI smarter)
-
 Hope you're as excited as I am! Let me know what you think!
 
 ***These steps follow when are you excited to use this project on your local machine:***
