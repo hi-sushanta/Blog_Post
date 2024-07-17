@@ -4,8 +4,7 @@ import numpy as np
 from torchvision import transforms
 from Model import DFKModel
 
-face_cascade = cv2.CascadeClassifier(
-    r"C:\Users\hiwhy\OneDrive\Documents\Blog_post\Facial-Key-Point-Detection\haarcascade_frontalface_default.xml")
+face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 
 model = DFKModel()
 model.load_state_dict(torch.load('my_model.pth', map_location=torch.device('cpu')))
@@ -19,6 +18,8 @@ transform = transforms.Compose([
 
 while True:
     is_frame, frame = cap.read()
+    # Create a black frame (3-channel for color)
+    black_frame = np.zeros((frame.shape[0], frame.shape[1],3), dtype=np.uint8)
     if not is_frame:
         break
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -40,7 +41,11 @@ while True:
             for i in range(label_p.shape[0]):
                 cv2.circle(frame, (int((label_p[i, 0]) * (w / 96) + x), int((label_p[i, 1]) * (h / 96) + y)), 4,
                         (0, 255, 0), -1)
-    cv2.imshow(window_name, frame)
+                cv2.circle(black_frame, (int((label_p[i, 0]) * (w / 96) + x), int((label_p[i, 1]) * (h / 96) + y)), 4,
+                        (0, 255, 0), -1)
+    
+    main_frame = np.concatenate((frame,black_frame),axis=1)
+    cv2.imshow(window_name, main_frame)
 
     key = cv2.waitKey(1)
 
