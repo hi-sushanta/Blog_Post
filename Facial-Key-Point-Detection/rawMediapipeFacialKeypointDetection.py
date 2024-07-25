@@ -1,17 +1,19 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+
 # Initialize MediaPipe Face Mesh
 mp_face_mesh = mp.solutions.face_mesh
-face_mesh = mp_face_mesh.FaceMesh(max_num_faces=1)
+face_mesh = mp_face_mesh.FaceMesh(max_num_faces=1,refine_landmarks=True)
 mp_drawing = mp.solutions.drawing_utils
+mp_drawing_styles = mp.solutions.drawing_styles
 
 # Initialize OpenCV video capture
 cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
     success, frame = cap.read()
-    black_frame = np.zeros((frame.shape[0], frame.shape[1],3), dtype=np.uint8)
+    black_frame = np.zeros((frame.shape[0], frame.shape[1], 3), dtype=np.uint8)
 
     if not success:
         break
@@ -24,16 +26,26 @@ while cap.isOpened():
 
     if results.multi_face_landmarks:
         for face_landmarks in results.multi_face_landmarks:
-            for idx, landmark in enumerate(face_landmarks.landmark):
-                # Get the landmark coordinates
-                x = int(landmark.x * frame.shape[1])
-                y = int(landmark.y * frame.shape[0])
-                
-                # Draw the keypoint
-                # cv2.circle(frame, (x, y), radius=1, color=(0, 255, 0), thickness=-1)
-                cv2.circle(black_frame,(x,y),radius=1,color=(14, 14, 232), thickness=-1)
+            # Draw the face mesh on the original frame
+            mp_drawing.draw_landmarks(
+                image=frame,
+                landmark_list=face_landmarks,
+                connections=mp_face_mesh.FACEMESH_TESSELATION,
+                landmark_drawing_spec=mp_drawing.DrawingSpec(color=(165, 165, 168), thickness=1, circle_radius=1),
+                connection_drawing_spec=mp_drawing.DrawingSpec(color=(123, 122, 128), thickness=1, circle_radius=1)
+            )
 
-    main_frame = np.concatenate((frame,black_frame),axis=1)
+            # Draw the face mesh on the black frame
+            mp_drawing.draw_landmarks(
+                image=black_frame,
+                landmark_list=face_landmarks,
+                connections=mp_face_mesh.FACEMESH_TESSELATION,
+                landmark_drawing_spec=mp_drawing.DrawingSpec(color=(165, 165, 168), thickness=1, circle_radius=1),
+                connection_drawing_spec=mp_drawing.DrawingSpec(color=(123, 122, 128), thickness=1, circle_radius=1)
+            )
+
+    # Concatenate the original frame and the black frame side by side
+    main_frame = np.concatenate((frame, black_frame), axis=1)
 
     # Display the frame with landmarks
     cv2.imshow('MediaPipe Face Mesh', main_frame)
