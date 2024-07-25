@@ -6,4 +6,4 @@ Deep learning models are particularly adept at this task due to their ability to
 
 Ready to dive deeper and craft your own model to explore the real world? Check out this article to ignite your journey!
 
-***link:*** https://hiwhy.io/facial-keypoint-detection-with-pytorch
+***link:*** https://sushantadev.hashnode.dev/facial-keypoint-detection-with-pytorch
