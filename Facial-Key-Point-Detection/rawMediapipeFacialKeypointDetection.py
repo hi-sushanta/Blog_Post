@@ -51,7 +51,7 @@ while cap.isOpened():
 
     # Concatenate the original frame and the black frame side by side
     main_frame = np.concatenate((frame, black_frame), axis=1)
-    output.write(main_frame)
+    output.write(main_frame) # combine each frame to create one video and writes as locally.
     # Display the frame with landmarks
     cv2.imshow(window_name , main_frame)
 
