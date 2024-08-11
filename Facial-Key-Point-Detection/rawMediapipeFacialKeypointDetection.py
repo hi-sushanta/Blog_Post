@@ -10,7 +10,12 @@ mp_drawing_styles = mp.solutions.drawing_styles
 
 # Initialize OpenCV video capture
 cap = cv2.VideoCapture(0)
+window_name = "Raw MediaPipe"
+cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+fps = cap.get(cv2.CAP_PROP_FPS)
 
+output = cv2.VideoWriter("result.mp4", fourcc, fps, (1280, 480)) 
 while cap.isOpened():
     success, frame = cap.read()
     black_frame = np.zeros((frame.shape[0], frame.shape[1], 3), dtype=np.uint8)
@@ -46,9 +51,9 @@ while cap.isOpened():
 
     # Concatenate the original frame and the black frame side by side
     main_frame = np.concatenate((frame, black_frame), axis=1)
-
+    output.write(main_frame)
     # Display the frame with landmarks
-    cv2.imshow('MediaPipe Face Mesh', main_frame)
+    cv2.imshow(window_name , main_frame)
 
     # Break the loop on 'q' key press
     key = cv2.waitKey(1)
@@ -58,3 +63,4 @@ while cap.isOpened():
 # Release the video capture object and close all OpenCV windows
 cap.release()
 cv2.destroyAllWindows()
+output.release()
