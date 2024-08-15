@@ -3,8 +3,13 @@ from PIL import Image
 import streamlit as st
 import io
 
-st.title("Solve Math From Image")
+st.set_page_config(layout="wide")
+st.image("Math1.png",use_column_width=True)
 
+st.title("Solve Math Problems from an Image")
+# video_file = open('Math.mp4', 'rb')
+# video_bytes = video_file.read()
+# st.video(video_bytes,start_time=0)
 uploaded_files = st.file_uploader("Math Image Upload")
 if uploaded_files is not None:
     genai.configure(api_key="AIzaSyDxPX2Bq9q4kf15723PlvcVG1h3iYpEzeQ")
@@ -21,4 +26,6 @@ if uploaded_files is not None:
         st.image(uploaded_files)
     with col2:
         st.title("Solution")
+        
         st.markdown(response.text)
+        
